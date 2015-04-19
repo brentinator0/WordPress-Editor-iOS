@@ -534,7 +534,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
      {
          if ([parameterName isEqualToString:kFieldIdParameterName]) {
              if ([parameterValue isEqualToString:kWPEditorViewFieldTitleId]) {
-                 self.focusedField = self.titleField;
+                 self.focusedField = self.contentField;
              } else if ([parameterValue isEqualToString:kWPEditorViewFieldContentId]) {
                  self.focusedField = self.contentField;
              }
@@ -1681,7 +1681,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 
 - (void)showHTMLSource
 {
-    self.sourceView.text = [self.contentField html];
+    //self.sourceView.text = [self.contentField html];
     self.sourceView.hidden = NO;
     self.sourceViewTitleField.text = [self.titleField strippedHtml];
     self.sourceViewTitleField.hidden = NO;
