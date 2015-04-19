@@ -45,8 +45,8 @@ WPEditorViewControllerMode;
  *
  */
 - (void)editorViewController:(WPEditorViewController*)editorViewController
-       imageTapped:(NSString *)imageId
-               url:(NSURL *)url;
+                 imageTapped:(NSString *)imageId
+                         url:(NSURL *)url;
 
 /**
  *	@brief		Received when the user taps on a image in the editor.

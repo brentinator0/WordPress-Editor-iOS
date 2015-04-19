@@ -95,6 +95,28 @@ typedef enum
  */
 - (void)editorToolbarView:(WPEditorToolbarView*)editorToolbarView
            showHTMLSource:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+      addLeftAngleBracket:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+     addRightAngleBracket:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+                addPeriod:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+            addNumberSign:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+                 addComma:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+          addForwardSlash:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+                 addColon:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+             addSemiColon:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+        addLeftCurlyBrace:(UIBarButtonItem *)barButtonItem;
+- (void)editorToolbarView:(WPEditorToolbarView *)editorToolbarView
+       addRightCurlyBrace:(UIBarButtonItem *)barButtonItem;
+
+
 @end
 
 /**

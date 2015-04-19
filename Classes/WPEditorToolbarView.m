@@ -10,12 +10,11 @@ static int kNegativeToolbarItemPadding = 12;
 static int kNegativeSixToolbarItemPadding = 6;
 static int kNegativeSixPlusToolbarItemPadding = 2;
 static int kNegativeLeftToolbarLeftPadding = 3;
-static int kNegativeRightToolbarPadding = 20;
 static int kNegativeSixPlusRightToolbarPadding = 24;
 
 static const CGFloat WPEditorToolbarHeight = 40;
 static const CGFloat WPEditorToolbarButtonHeight = 40;
-static const CGFloat WPEditorToolbarButtonWidth = 40;
+static const CGFloat WPEditorToolbarButtonWidth = 25;
 static const CGFloat WPEditorToolbarDividerLineHeight = 28;
 static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 
@@ -32,6 +31,17 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 
 #pragma mark - Properties: Toolbar items
 @property (nonatomic, strong, readwrite) UIBarButtonItem* htmlBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* leftAngleBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* rightAngleBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* leftCurlyBraceBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* rightCurlyBraceBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* semiColonButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* colonButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* forwardSlashBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* commaBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* numberSignBarButtonItem;
+@property (nonatomic, strong, readwrite) UIBarButtonItem* periodBarButtonItem;
+
 
 /**
  *  Toolbar items to include
@@ -70,7 +80,7 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
     [self buildLeftToolbar];
     
     if (!IS_IPAD) {
-        [self.contentView addSubview:[self rightToolbarHolder]];
+        [self.toolbarScroll addSubview:[self rightToolbarHolder]];
     }
 }
 
@@ -172,7 +182,7 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 }
 
 - (void)buildMainToolbarHolder
-{    
+{
     CGRect subviewFrame = self.frame;
     subviewFrame.origin = CGPointZero;
     
@@ -271,11 +281,7 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 - (ZSSRichTextEditorToolbar)defaultToolbarItems
 {
     ZSSRichTextEditorToolbar defaultToolbarItems = (ZSSRichTextEditorToolbarBold
-                                                    | ZSSRichTextEditorToolbarItalic
-                                                    | ZSSRichTextEditorToolbarInsertLink
-                                                    | ZSSRichTextEditorToolbarBlockQuote
-                                                    | ZSSRichTextEditorToolbarUnorderedList
-                                                    | ZSSRichTextEditorToolbarOrderedList);
+                                                    | ZSSRichTextEditorToolbarItalic);
     
     // iPad gets the HTML source button too
     if (IS_IPAD) {
@@ -309,7 +315,7 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 {
     for (ZSSBarButtonItem *item in self.leftToolbar.items) {
         if (item.tag != kWPEditorViewControllerElementShowSourceBarButton) {
-           [item setSelected:NO];
+            [item setSelected:NO];
         }
     }
 }
@@ -352,8 +358,8 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
         UIFont * font = [UIFont boldSystemFontOfSize:10];
         NSDictionary * attributes = @{NSFontAttributeName: font};
         [htmlBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
-        htmlBarButtonItem.accessibilityLabel = NSLocalizedString(@"Display HTML",
-                                                                 @"Accessibility label for display HTML button on formatting toolbar.");
+        //htmlBarButtonItem.accessibilityLabel = NSLocalizedString(@"Display HTML",
+        //                                                         @"Accessibility label for display HTML button on formatting toolbar.");
         
         CGRect customButtonFrame = CGRectMake(0,
                                               0,
@@ -378,6 +384,232 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
     return _htmlBarButtonItem;
 }
 
+- (UIBarButtonItem*)leftAngleBracketBarButtonItem
+{
+    if (!_leftAngleBarButtonItem) {
+        UIBarButtonItem* leftAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@"<"
+                                                                                    style:UIBarButtonItemStylePlain
+                                                                                   target:nil
+                                                                                   action:nil];
+        
+        UIFont * font = [UIFont boldSystemFontOfSize:16];
+        NSDictionary * attributes = @{NSFontAttributeName: font};
+        [leftAngleBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+        
+        CGRect customButtonFrame = CGRectMake(0,
+                                              0,
+                                              WPEditorToolbarButtonWidth,
+                                              WPEditorToolbarButtonHeight);
+        
+        WPEditorToolbarButton* customButton = [[WPEditorToolbarButton alloc] initWithFrame:customButtonFrame];
+        [customButton setTitle:@"<" forState:UIControlStateNormal];
+        customButton.normalTintColor = self.itemTintColor;
+        customButton.selectedTintColor = self.selectedItemTintColor;
+        customButton.reversesTitleShadowWhenHighlighted = YES;
+        customButton.titleLabel.font = font;
+        [customButton addTarget:self
+                         action:@selector(addLeftAngleBracket:)
+               forControlEvents:UIControlEventTouchUpInside];
+        
+        leftAngleBarButtonItem.customView = customButton;
+        
+        _leftAngleBarButtonItem = leftAngleBarButtonItem;
+    }
+    
+    return _leftAngleBarButtonItem;
+}
+
+- (UIBarButtonItem*)rightAngleBracketBarButtonItem
+{
+    if (!_rightAngleBarButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@">"
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        UIFont * font = [UIFont boldSystemFontOfSize:16];
+        NSDictionary * attributes = @{NSFontAttributeName: font};
+        [rightAngleBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+        
+        CGRect customButtonFrame = CGRectMake(0,
+                                              0,
+                                              WPEditorToolbarButtonWidth,
+                                              WPEditorToolbarButtonHeight);
+        
+        WPEditorToolbarButton* customButton = [[WPEditorToolbarButton alloc] initWithFrame:customButtonFrame];
+        [customButton setTitle:@">" forState:UIControlStateNormal];
+        customButton.normalTintColor = self.itemTintColor;
+        customButton.selectedTintColor = self.selectedItemTintColor;
+        customButton.reversesTitleShadowWhenHighlighted = YES;
+        customButton.titleLabel.font = font;
+        [customButton addTarget:self
+                         action:@selector(addRightAngleBracket:)
+               forControlEvents:UIControlEventTouchUpInside];
+        
+        rightAngleBarButtonItem.customView = customButton;
+        
+        _rightAngleBarButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _rightAngleBarButtonItem;
+}
+
+- (UIBarButtonItem*)leftCurlyBraceBarButtonItem
+{
+    if (!_leftCurlyBraceBarButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@"{"
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@"{" andSelector:@selector(addLeftCurlyBrace:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        
+        _leftCurlyBraceBarButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _leftCurlyBraceBarButtonItem;
+}
+
+- (UIBarButtonItem*)rightCurlyBraceBarButtonItem
+{
+    if (!_rightCurlyBraceBarButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@"}"
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@"}" andSelector:@selector(addRightCurlyBrace:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        
+        _rightCurlyBraceBarButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _rightCurlyBraceBarButtonItem;
+}
+
+- (UIBarButtonItem*)semiColonBarButtonItem
+{
+    if (!_semiColonButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@";"
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@";" andSelector:@selector(addSemiColon:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        _semiColonButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _semiColonButtonItem;
+}
+
+- (UIBarButtonItem*)colonBarButtonItem
+{
+    if (!_colonButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@":"
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@":" andSelector:@selector(addColon:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        _colonButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _colonButtonItem;
+}
+
+- (UIBarButtonItem*)forwardSlashBarButtonItem
+{
+    if (!_forwardSlashBarButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@"/"
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@"/" andSelector:@selector(addForwardSlash:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        _forwardSlashBarButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _forwardSlashBarButtonItem;
+}
+
+- (UIBarButtonItem*)commaBarButtonItem
+{
+    if (!_commaBarButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@","
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@"," andSelector:@selector(addComma:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        _commaBarButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _commaBarButtonItem;
+}
+
+- (UIBarButtonItem*)numberSignBarButtonItem
+{
+    if (!_commaBarButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@"#"
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@"#" andSelector:@selector(addNumberSign:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        _numberSignBarButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _numberSignBarButtonItem;
+}
+
+- (UIBarButtonItem*)periodBarButtonItem
+{
+    if (!_periodBarButtonItem) {
+        UIBarButtonItem* rightAngleBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@"."
+                                                                                     style:UIBarButtonItemStylePlain
+                                                                                    target:nil
+                                                                                    action:nil];
+        
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@"." andSelector:@selector(addPeriod:) andBarButtonItem:rightAngleBarButtonItem];
+        
+        _periodBarButtonItem = rightAngleBarButtonItem;
+    }
+    
+    return _periodBarButtonItem;
+}
+
+- (WPEditorToolbarButton* )createCustomButtonWithTitle:(NSString *) title
+                                           andSelector:(SEL)selector
+                                      andBarButtonItem: (UIBarButtonItem *) barButtonItem
+{
+    UIFont * font = [UIFont boldSystemFontOfSize:16];
+    NSDictionary * attributes = @{NSFontAttributeName: font};
+    [barButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
+    CGRect customButtonFrame = CGRectMake(0,
+                                          0,
+                                          WPEditorToolbarButtonWidth,
+                                          WPEditorToolbarButtonHeight);
+    
+    WPEditorToolbarButton* customButton = [[WPEditorToolbarButton alloc] initWithFrame:customButtonFrame];
+    [customButton setTitle:title forState:UIControlStateNormal];
+    customButton.normalTintColor = self.itemTintColor;
+    customButton.selectedTintColor = self.selectedItemTintColor;
+    customButton.reversesTitleShadowWhenHighlighted = YES;
+    customButton.titleLabel.font = font;
+    [customButton addTarget:self
+                     action:selector
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    return customButton;
+}
+
 - (UIView*)rightToolbarHolder
 {
     UIView* rightToolbarHolder = _rightToolbarHolder;
@@ -396,21 +628,25 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
             _rightToolbarDivider = rightToolbarDivider;
         }
         
-        CGRect rightSpacerFrame = CGRectMake(CGRectGetMaxX(self.rightToolbarDivider.frame),
-                                             0.0f,
-                                             kNegativeRightToolbarPadding / 2,
-                                             WPEditorToolbarHeight);
-        UIView *rightSpacer = [[UIView alloc] initWithFrame:rightSpacerFrame];
+        //        CGRect rightSpacerFrame = CGRectMake(CGRectGetMaxX(self.rightToolbarDivider.frame),
+        //                                             0.0f,
+        //                                             kNegativeRightToolbarPadding / 2,
+        //                                             WPEditorToolbarHeight);
+        //        UIView *rightSpacer = [[UIView alloc] initWithFrame:rightSpacerFrame];
         
-        CGRect rightToolbarHolderFrame = CGRectMake(CGRectGetWidth(self.frame) - (WPEditorToolbarButtonWidth + CGRectGetWidth(self.rightToolbarDivider.frame) + CGRectGetWidth(rightSpacer.frame)),
+        CGRect screenBound = [[UIScreen mainScreen] bounds];
+        CGSize screenSize = screenBound.size;
+        CGFloat screenWidth = screenSize.width;
+        
+        CGRect rightToolbarHolderFrame = CGRectMake(0,
                                                     0.0f,
-                                                    WPEditorToolbarButtonWidth + CGRectGetWidth(self.rightToolbarDivider.frame) + CGRectGetWidth(rightSpacer.frame),
+                                                    screenWidth ,
                                                     WPEditorToolbarHeight);
         rightToolbarHolder = [[UIView alloc] initWithFrame:rightToolbarHolderFrame];
-        rightToolbarHolder.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        rightToolbarHolder.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         rightToolbarHolder.clipsToBounds = YES;
         
-        CGRect toolbarFrame = CGRectMake(CGRectGetMaxX(rightSpacer.frame),
+        CGRect toolbarFrame = CGRectMake(CGRectGetMaxX(self.rightToolbarDivider.frame),
                                          0.0f,
                                          CGRectGetWidth(rightToolbarHolder.frame),
                                          CGRectGetHeight(rightToolbarHolder.frame));
@@ -418,24 +654,25 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
         UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
         self.rightToolbar = toolbar;
         
-        [rightToolbarHolder addSubview:rightSpacer];
+        //[rightToolbarHolder addSubview:rightSpacer];
         [rightToolbarHolder addSubview:self.rightToolbarDivider];
         [rightToolbarHolder addSubview:toolbar];
         
-        UIBarButtonItem *negativeSeparator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+        UIBarButtonItem *negativeSeparator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                            target:nil
                                                                                            action:nil];
         // Negative separator needs to be different on 6+
         if ([WPDeviceIdentification isiPhoneSixPlus]) {
             negativeSeparator.width = -kNegativeSixPlusRightToolbarPadding;
         } else {
-            negativeSeparator.width = -kNegativeRightToolbarPadding;
+            negativeSeparator.width = 40;
         }
         
-        toolbar.items = @[negativeSeparator, [self htmlBarButtonItem]];
+        //toolbar.items = @[negativeSeparator, [self htmlBarButtonItem]];
+        toolbar.items = @[[self leftAngleBracketBarButtonItem],[self rightAngleBracketBarButtonItem],[self leftCurlyBraceBarButtonItem],[self rightCurlyBraceBarButtonItem], [self semiColonBarButtonItem], [self colonBarButtonItem], [self forwardSlashBarButtonItem], [self numberSignBarButtonItem]];
         toolbar.barTintColor = self.backgroundColor;
     }
-    
+    [self.toolbarScroll addSubview:rightToolbarHolder];
     return rightToolbarHolder;
 }
 
@@ -486,12 +723,102 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
         htmlButton.normalTintColor = itemTintColor;
         self.htmlBarButtonItem.tintColor = itemTintColor;
     }
+    
+    if (self.leftAngleBarButtonItem) {
+        WPEditorToolbarButton* htmlButton = (WPEditorToolbarButton*)self.leftAngleBarButtonItem.customView;
+        NSAssert([htmlButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an < button of class WPEditorToolbarButton here.");
+        
+        htmlButton.normalTintColor = itemTintColor;
+        self.leftAngleBarButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.rightAngleBarButtonItem) {
+        WPEditorToolbarButton* htmlButton = (WPEditorToolbarButton*)self.rightAngleBarButtonItem.customView;
+        NSAssert([htmlButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an > button of class WPEditorToolbarButton here.");
+        
+        htmlButton.normalTintColor = itemTintColor;
+        self.rightAngleBarButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.leftCurlyBraceBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.leftCurlyBraceBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an { button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.leftCurlyBraceBarButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.rightCurlyBraceBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.rightCurlyBraceBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an } button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.rightCurlyBraceBarButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.semiColonButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.semiColonButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an ; button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.semiColonButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.colonButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.colonButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an ; button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.colonButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.forwardSlashBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.forwardSlashBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an forward slash button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.forwardSlashBarButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.commaBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.commaBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have a , button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.commaBarButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.numberSignBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.numberSignBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have a # button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.numberSignBarButtonItem.tintColor = itemTintColor;
+    }
+    
+    if (self.periodBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.periodBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have a . button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.normalTintColor = itemTintColor;
+        self.periodBarButtonItem.tintColor = itemTintColor;
+    }
 }
 
 - (void)setSelectedItemTintColor:(UIColor *)selectedItemTintColor
 {
     _selectedItemTintColor = selectedItemTintColor;
-
+    
     if (self.htmlBarButtonItem) {
         WPEditorToolbarButton* htmlButton = (WPEditorToolbarButton*)self.htmlBarButtonItem.customView;
         NSAssert([htmlButton isKindOfClass:[WPEditorToolbarButton class]],
@@ -499,9 +826,148 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
         
         htmlButton.selectedTintColor = selectedItemTintColor;
     }
+    
+    if (self.leftAngleBarButtonItem) {
+        WPEditorToolbarButton* htmlButton = (WPEditorToolbarButton*)self.leftAngleBarButtonItem.customView;
+        NSAssert([htmlButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        htmlButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.rightAngleBarButtonItem) {
+        WPEditorToolbarButton* htmlButton = (WPEditorToolbarButton*)self.rightAngleBarButtonItem.customView;
+        NSAssert([htmlButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        htmlButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.leftCurlyBraceBarButtonItem) {
+        WPEditorToolbarButton* htmlButton = (WPEditorToolbarButton*)self.leftCurlyBraceBarButtonItem.customView;
+        NSAssert([htmlButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        htmlButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.rightCurlyBraceBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.rightCurlyBraceBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.semiColonButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.semiColonButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.colonButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.colonButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.forwardSlashBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.forwardSlashBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.commaBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.commaBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.numberSignBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.numberSignBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.selectedTintColor = selectedItemTintColor;
+    }
+    
+    if (self.periodBarButtonItem) {
+        WPEditorToolbarButton* toolBarButton = (WPEditorToolbarButton*)self.periodBarButtonItem.customView;
+        NSAssert([toolBarButton isKindOfClass:[WPEditorToolbarButton class]],
+                 @"Expected to have an HTML button of class WPEditorToolbarButton here.");
+        
+        toolBarButton.selectedTintColor = selectedItemTintColor;
+    }
 }
 
 #pragma mark - Temporary: added to make the refactor easier, but should be removed at some point
+
+- (void)addPeriod:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addPeriod:barButtonItem];
+}
+
+- (void)addNumberSign:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addNumberSign:barButtonItem];
+}
+
+- (void)addComma:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addComma:barButtonItem];
+}
+
+- (void)addForwardSlash:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addForwardSlash:barButtonItem];
+}
+
+- (void)addColon:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addColon:barButtonItem];
+}
+
+- (void)addSemiColon:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addSemiColon:barButtonItem];
+}
+
+- (void)addRightCurlyBrace:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addRightCurlyBrace:barButtonItem];
+}
+
+- (void)addLeftCurlyBrace:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addLeftCurlyBrace:barButtonItem];
+}
+
+- (void)addLeftAngleBracket:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addLeftAngleBracket:barButtonItem];
+}
+- (void)addRightAngleBracket:(UIBarButtonItem *)barButtonItem
+{
+    
+    [self.delegate editorToolbarView:self addRightAngleBracket:barButtonItem];
+}
 
 - (void)showHTMLSource:(UIBarButtonItem *)barButtonItem
 {
