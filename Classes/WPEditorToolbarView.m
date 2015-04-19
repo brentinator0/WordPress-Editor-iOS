@@ -15,6 +15,7 @@ static int kNegativeSixPlusRightToolbarPadding = 24;
 static const CGFloat WPEditorToolbarHeight = 40;
 static const CGFloat WPEditorToolbarButtonHeight = 40;
 static const CGFloat WPEditorToolbarButtonWidth = 25;
+static const CGFloat WPIpadEditorToolbarButtonWidth = 80;
 static const CGFloat WPEditorToolbarDividerLineHeight = 28;
 static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 
@@ -79,9 +80,8 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
     [self buildToolbarScroll];
     [self buildLeftToolbar];
     
-    if (!IS_IPAD) {
-        [self.toolbarScroll addSubview:[self rightToolbarHolder]];
-    }
+    [self.toolbarScroll addSubview:[self rightToolbarHolder]];
+    
 }
 
 - (void)reloadItems
@@ -142,19 +142,12 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 {
     NSMutableArray *items = [self.items mutableCopy];
     CGFloat toolbarWidth = CGRectGetWidth(self.toolbarScroll.frame);
-    UIBarButtonItem *flexSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-                                                                                target:nil
-                                                                                action:nil];
-    UIBarButtonItem *buttonSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-                                                                                  target:nil
-                                                                                  action:nil];
-    buttonSpacer.width = WPEditorToolbarButtonWidth;
-    [items insertObject:buttonSpacer atIndex:1];
-    [items insertObject:buttonSpacer atIndex:5];
-    [items insertObject:buttonSpacer atIndex:7];
-    [items insertObject:buttonSpacer atIndex:11];
-    [items insertObject:flexSpacer atIndex:0];
-    [items insertObject:flexSpacer atIndex:items.count];
+    /*UIBarButtonItem *flexSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+     target:nil
+     action:nil];
+     UIBarButtonItem *buttonSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+     target:nil
+     action:nil];*/
     self.leftToolbar.items = items;
     self.leftToolbar.frame = CGRectMake(0, 0, toolbarWidth, WPEditorToolbarHeight);
     self.toolbarScroll.contentSize = CGSizeMake(CGRectGetWidth(self.leftToolbar.frame),
@@ -411,7 +404,7 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
                          action:@selector(addLeftAngleBracket:)
                forControlEvents:UIControlEventTouchUpInside];
         
-        leftAngleBarButtonItem.customView = customButton;
+        leftAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@"<" andSelector:@selector(addLeftAngleBracket:) andBarButtonItem:leftAngleBarButtonItem];
         
         _leftAngleBarButtonItem = leftAngleBarButtonItem;
     }
@@ -427,26 +420,8 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
                                                                                     target:nil
                                                                                     action:nil];
         
-        UIFont * font = [UIFont boldSystemFontOfSize:16];
-        NSDictionary * attributes = @{NSFontAttributeName: font};
-        [rightAngleBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+        rightAngleBarButtonItem.customView = [self createCustomButtonWithTitle:@">" andSelector:@selector(addRightAngleBracket:) andBarButtonItem:rightAngleBarButtonItem];
         
-        CGRect customButtonFrame = CGRectMake(0,
-                                              0,
-                                              WPEditorToolbarButtonWidth,
-                                              WPEditorToolbarButtonHeight);
-        
-        WPEditorToolbarButton* customButton = [[WPEditorToolbarButton alloc] initWithFrame:customButtonFrame];
-        [customButton setTitle:@">" forState:UIControlStateNormal];
-        customButton.normalTintColor = self.itemTintColor;
-        customButton.selectedTintColor = self.selectedItemTintColor;
-        customButton.reversesTitleShadowWhenHighlighted = YES;
-        customButton.titleLabel.font = font;
-        [customButton addTarget:self
-                         action:@selector(addRightAngleBracket:)
-               forControlEvents:UIControlEventTouchUpInside];
-        
-        rightAngleBarButtonItem.customView = customButton;
         
         _rightAngleBarButtonItem = rightAngleBarButtonItem;
     }
@@ -592,10 +567,14 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
     NSDictionary * attributes = @{NSFontAttributeName: font};
     [barButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
     
-    CGRect customButtonFrame = CGRectMake(0,
-                                          0,
-                                          WPEditorToolbarButtonWidth,
-                                          WPEditorToolbarButtonHeight);
+    CGRect customButtonFrame;
+    
+    if (IS_IPAD) {
+        customButtonFrame = CGRectMake(0,0,WPIpadEditorToolbarButtonWidth,WPEditorToolbarButtonHeight);
+        
+    }else{
+        customButtonFrame = CGRectMake(0,0,WPEditorToolbarButtonWidth,WPEditorToolbarButtonHeight);
+    }
     
     WPEditorToolbarButton* customButton = [[WPEditorToolbarButton alloc] initWithFrame:customButtonFrame];
     [customButton setTitle:title forState:UIControlStateNormal];

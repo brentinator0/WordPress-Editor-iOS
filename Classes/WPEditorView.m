@@ -20,7 +20,7 @@ static NSString* const kWPEditorViewFieldContentId = @"zss_field_content";
 
 static const CGFloat UITextFieldLeftRightInset = 15.5f;
 static const CGFloat iPadUITextFieldLeftRightInset = 90.0f;
-static const CGFloat UITextFieldFieldHeight = 44.0f;
+//static const CGFloat UITextFieldFieldHeight = 44.0f;
 static const CGFloat HTMLViewTopInset = 15.0f;
 static const CGFloat HTMLViewLeftRightInset = 10.0f;
 static const CGFloat iPadHTMLViewLeftRightInset = 85.0f;
@@ -74,12 +74,12 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-	self = [super initWithFrame:frame];
-	
-	if (self) {
-		CGRect childFrame = frame;
-		childFrame.origin = CGPointZero;
-		
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        CGRect childFrame = frame;
+        childFrame.origin = CGPointZero;
+        
         [self createSourceTitleViewWithFrame: childFrame];
         [self createSourceDividerViewWithFrame:CGRectMake(0.0f, CGRectGetMaxY(self.sourceViewTitleField.frame), CGRectGetWidth(childFrame), 1.0f)];
         CGRect sourceViewFrame = CGRectMake(0.0f,
@@ -88,11 +88,11 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
                                             CGRectGetHeight(childFrame)-CGRectGetHeight(self.sourceViewTitleField.frame)-CGRectGetHeight(self.sourceContentDividerView.frame));
         
         [self createSourceViewWithFrame:sourceViewFrame];
-		[self createWebViewWithFrame:childFrame];
-		[self setupHTMLEditor];
-	}
-	
-	return self;
+        [self createWebViewWithFrame:childFrame];
+        [self setupHTMLEditor];
+    }
+    
+    return self;
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
@@ -108,14 +108,14 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
 
 - (void)createSourceTitleViewWithFrame:(CGRect)frame
 {
-    NSAssert(!_sourceViewTitleField, @"The source view title field must not exist when this method is called!");	
+    NSAssert(!_sourceViewTitleField, @"The source view title field must not exist when this method is called!");
     
     if (IS_IPAD) {
-        CGFloat textWidth = CGRectGetWidth(frame) - (2 * iPadUITextFieldLeftRightInset);
-        _sourceViewTitleField = [[UITextField alloc] initWithFrame:CGRectMake(iPadUITextFieldLeftRightInset, 5.0f, textWidth, UITextFieldFieldHeight)];
+        //CGFloat textWidth = CGRectGetWidth(frame) - (2 * iPadUITextFieldLeftRightInset);
+        //_sourceViewTitleField = [[UITextField alloc] initWithFrame:CGRectMake(iPadUITextFieldLeftRightInset, 5.0f, textWidth, UITextFieldFieldHeight)];
     } else {
-        CGFloat textWidth = CGRectGetWidth(frame) - (2 * UITextFieldLeftRightInset);
-        _sourceViewTitleField = [[UITextField alloc] initWithFrame:CGRectMake(UITextFieldLeftRightInset, 5.0f, textWidth, UITextFieldFieldHeight)];
+        //CGFloat textWidth = CGRectGetWidth(frame) - (2 * UITextFieldLeftRightInset);
+        //_sourceViewTitleField = [[UITextField alloc] initWithFrame:CGRectMake(UITextFieldLeftRightInset, 5.0f, textWidth, UITextFieldFieldHeight)];
     }
     
     _sourceViewTitleField.hidden = YES;
@@ -143,7 +143,7 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
     _sourceContentDividerView.backgroundColor = [WPStyleGuide greyLighten30];
     _sourceContentDividerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _sourceContentDividerView.hidden = YES;
-
+    
     [self addSubview:_sourceContentDividerView];
 }
 
@@ -167,13 +167,13 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
 
 - (void)createWebViewWithFrame:(CGRect)frame
 {
-	NSAssert(!_webView, @"The web view must not exist when this method is called!");
-	
-	_webView = [[UIWebView alloc] initWithFrame:frame];
-	_webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_webView.delegate = self;
-	_webView.scalesPageToFit = YES;
-	_webView.dataDetectorTypes = UIDataDetectorTypeNone;
+    NSAssert(!_webView, @"The web view must not exist when this method is called!");
+    
+    _webView = [[UIWebView alloc] initWithFrame:frame];
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _webView.delegate = self;
+    _webView.scalesPageToFit = YES;
+    _webView.dataDetectorTypes = UIDataDetectorTypeNone;
     _webView.backgroundColor = [UIColor clearColor];
     _webView.opaque = NO;
     _webView.scrollView.bounces = NO;
@@ -183,7 +183,7 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
     _webView.allowsInlineMediaPlayback = YES;
     [self startObservingWebViewContentSizeChanges];
     
-	[self addSubview:_webView];
+    [self addSubview:_webView];
 }
 
 - (void)setupHTMLEditor
@@ -216,7 +216,7 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
             NSValue *newValue = change[NSKeyValueChangeNewKey];
             
             CGSize newSize = [newValue CGSizeValue];
-        
+            
             if (newSize.height != self.lastEditorHeight) {
                 
                 // First make sure that the content size is not changed without us recalculating it.
@@ -407,25 +407,25 @@ static NSString* const WPEditorViewWebViewContentSizeKey = @"contentSize";
 
 -            (BOOL)webView:(UIWebView *)webView
 shouldStartLoadWithRequest:(NSURLRequest *)request
-			navigationType:(UIWebViewNavigationType)navigationType
+            navigationType:(UIWebViewNavigationType)navigationType
 {
-	NSURL *url = [request URL];
+    NSURL *url = [request URL];
     
-	BOOL shouldLoad = NO;
-	
-	if (navigationType != UIWebViewNavigationTypeLinkClicked) {
-		BOOL handled = [self handleWebViewCallbackURL:url];
-		shouldLoad = !handled;
-	}
+    BOOL shouldLoad = NO;
     
-	return shouldLoad;
+    if (navigationType != UIWebViewNavigationTypeLinkClicked) {
+        BOOL handled = [self handleWebViewCallbackURL:url];
+        shouldLoad = !handled;
+    }
+    
+    return shouldLoad;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-	if ([self.delegate respondsToSelector:@selector(editorViewDidFinishLoading:)]) {
-		[self.delegate editorViewDidFinishLoading:self];
-	}
+    if ([self.delegate respondsToSelector:@selector(editorViewDidFinishLoading:)]) {
+        [self.delegate editorViewDidFinishLoading:self];
+    }
 }
 
 #pragma mark - Handling callbacks
@@ -439,14 +439,14 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
  */
 - (BOOL)handleWebViewCallbackURL:(NSURL*)url
 {
-	NSParameterAssert([url isKindOfClass:[NSURL class]]);
-
-	BOOL handled = NO;
-
-	NSString *scheme = [url scheme];
-	
-	DDLogDebug(@"WebEditor callback received: %@", url);
-	
+    NSParameterAssert([url isKindOfClass:[NSURL class]]);
+    
+    BOOL handled = NO;
+    
+    NSString *scheme = [url scheme];
+    
+    DDLogDebug(@"WebEditor callback received: %@", url);
+    
     if (scheme) {
         if ([self isFocusInScheme:scheme]) {
             [self handleFocusInCallback:url];
@@ -502,8 +502,8 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
         }
         
     }
-	
-	return handled;
+    
+    return handled;
 }
 
 /**
@@ -614,27 +614,27 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
  */
 - (void)handleLinkTappedCallback:(NSURL*)url
 {
-	NSParameterAssert([url isKindOfClass:[NSURL class]]);
-	
-	static NSString* const kTappedUrlParameterName = @"url";
-	static NSString* const kTappedUrlTitleParameterName = @"title";
-	
-	__block NSURL* tappedUrl = nil;
-	__block NSString* tappedUrlTitle = nil;
-	
-	[self parseParametersFromCallbackURL:url
-		 andExecuteBlockForEachParameter:^(NSString *parameterName, NSString *parameterValue)
-	{
-		if ([parameterName isEqualToString:kTappedUrlParameterName]) {
-			tappedUrl = [NSURL URLWithString:[self stringByDecodingURLFormat:parameterValue]];
-		} else if ([parameterName isEqualToString:kTappedUrlTitleParameterName]) {
-			tappedUrlTitle = [self stringByDecodingURLFormat:parameterValue];
-		}
-	} onComplete:^{		
-		if ([self.delegate respondsToSelector:@selector(editorView:linkTapped:title:)]) {
-			[self.delegate editorView:self linkTapped:tappedUrl title:tappedUrlTitle];
-		}
-	}];
+    NSParameterAssert([url isKindOfClass:[NSURL class]]);
+    
+    static NSString* const kTappedUrlParameterName = @"url";
+    static NSString* const kTappedUrlTitleParameterName = @"title";
+    
+    __block NSURL* tappedUrl = nil;
+    __block NSString* tappedUrlTitle = nil;
+    
+    [self parseParametersFromCallbackURL:url
+         andExecuteBlockForEachParameter:^(NSString *parameterName, NSString *parameterValue)
+     {
+         if ([parameterName isEqualToString:kTappedUrlParameterName]) {
+             tappedUrl = [NSURL URLWithString:[self stringByDecodingURLFormat:parameterValue]];
+         } else if ([parameterName isEqualToString:kTappedUrlTitleParameterName]) {
+             tappedUrlTitle = [self stringByDecodingURLFormat:parameterValue];
+         }
+     } onComplete:^{
+         if ([self.delegate respondsToSelector:@selector(editorView:linkTapped:title:)]) {
+             [self.delegate editorView:self linkTapped:tappedUrl title:tappedUrlTitle];
+         }
+     }];
 }
 
 /**
@@ -680,23 +680,23 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)handleVideoTappedCallback:(NSURL *)url
 {
     NSParameterAssert([url isKindOfClass:[NSURL class]]);
-
+    
     static NSString *const kTappedUrlParameterName = @"url";
     static NSString *const kTappedIdParameterName = @"id";
-
+    
     __block NSURL *tappedUrl = nil;
     __block NSString *tappedId = nil;
-
+    
     [self parseParametersFromCallbackURL:url andExecuteBlockForEachParameter:^(NSString *parameterName, NSString *parameterValue) {
-         if ([parameterName isEqualToString:kTappedUrlParameterName]) {
-             tappedUrl = [NSURL URLWithString:[self stringByDecodingURLFormat:parameterValue]];
-         } else if ([parameterName isEqualToString:kTappedIdParameterName]) {
-             tappedId = [self stringByDecodingURLFormat:parameterValue];
-         }
+        if ([parameterName isEqualToString:kTappedUrlParameterName]) {
+            tappedUrl = [NSURL URLWithString:[self stringByDecodingURLFormat:parameterValue]];
+        } else if ([parameterName isEqualToString:kTappedIdParameterName]) {
+            tappedId = [self stringByDecodingURLFormat:parameterValue];
+        }
     } onComplete:^{
-         if ([self.delegate respondsToSelector:@selector(editorView:videoTapped:url:)]) {
-             [self.delegate editorView:self videoTapped:tappedId url:tappedUrl];
-         }
+        if ([self.delegate respondsToSelector:@selector(editorView:videoTapped:url:)]) {
+            [self.delegate editorView:self videoTapped:tappedId url:tappedUrl];
+        }
     }];
 }
 
@@ -745,7 +745,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)handleVideoFullScreenEndedCallback:(NSURL *)aURL
 {
     NSParameterAssert([aURL isKindOfClass:[NSURL class]]);
-
+    
     [self restoreSelection];
 }
 
@@ -785,21 +785,21 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)handleVideoReplacedCallback:(NSURL *)url
 {
     NSParameterAssert([url isKindOfClass:[NSURL class]]);
-
+    
     static NSString *const kVideoIdParameterName = @"id";
-
+    
     __block NSString *videoId = nil;
-
+    
     [self parseParametersFromCallbackURL:url andExecuteBlockForEachParameter:^(NSString *parameterName, NSString *parameterValue)
-    {
+     {
          if ([parameterName isEqualToString:kVideoIdParameterName]) {
              videoId = [self stringByDecodingURLFormat:parameterValue];
          }
-    } onComplete:^{
+     } onComplete:^{
          if ([self.delegate respondsToSelector:@selector(editorView:videoReplaced:)]) {
              [self.delegate editorView:self videoReplaced:videoId];
          }
-    }];
+     }];
 }
 
 - (void)handleVideoPressInfoRequestCallback:(NSURL *)url
@@ -820,7 +820,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
              [self.delegate editorView:self videoPressInfoRequest:videoId];
          }
      }];
-
+    
 }
 
 /**
@@ -950,23 +950,23 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 
 - (BOOL)isDOMLoadedScheme:(NSString*)scheme
 {
-	static NSString* const kCallbackScheme = @"callback-dom-loaded";
-	
-	return [scheme isEqualToString:kCallbackScheme];
+    static NSString* const kCallbackScheme = @"callback-dom-loaded";
+    
+    return [scheme isEqualToString:kCallbackScheme];
 }
 
 - (BOOL)isFocusInScheme:(NSString*)scheme
 {
-	static NSString* const kCallbackScheme = @"callback-focus-in";
-	
-	return [scheme isEqualToString:kCallbackScheme];
+    static NSString* const kCallbackScheme = @"callback-focus-in";
+    
+    return [scheme isEqualToString:kCallbackScheme];
 }
 
 - (BOOL)isFocusOutScheme:(NSString*)scheme
 {
-	static NSString* const kCallbackScheme = @"callback-focus-out";
-	
-	return [scheme isEqualToString:kCallbackScheme];
+    static NSString* const kCallbackScheme = @"callback-focus-out";
+    
+    return [scheme isEqualToString:kCallbackScheme];
 }
 
 - (BOOL)isLinkTappedScheme:(NSString*)scheme
@@ -974,9 +974,9 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     NSAssert([scheme isKindOfClass:[NSString class]],
              @"We're expecting a non-nil string object here.");
     
-	static NSString* const kCallbackScheme = @"callback-link-tap";
-	
-	return [scheme isEqualToString:kCallbackScheme];
+    static NSString* const kCallbackScheme = @"callback-link-tap";
+    
+    return [scheme isEqualToString:kCallbackScheme];
 }
 
 - (BOOL)isImageTappedScheme:(NSString*)scheme
@@ -1063,9 +1063,9 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 {
     NSAssert([scheme isKindOfClass:[NSString class]],
              @"We're expecting a non-nil string object here.");
-
+    
     static NSString *const kCallbackScheme = @"callback-video-fullscreen-started";
-
+    
     return [scheme isEqualToString:kCallbackScheme];
 }
 
@@ -1073,9 +1073,9 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 {
     NSAssert([scheme isKindOfClass:[NSString class]],
              @"We're expecting a non-nil string object here.");
-
+    
     static NSString *const kCallbackScheme = @"callback-video-fullscreen-ended";
-
+    
     return [scheme isEqualToString:kCallbackScheme];
 }
 
@@ -1091,28 +1091,28 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 
 - (BOOL)isSelectionStyleScheme:(NSString*)scheme
 {
-	static NSString* const kCallbackScheme = @"callback-selection-style";
-
-	return [scheme isEqualToString:kCallbackScheme];
+    static NSString* const kCallbackScheme = @"callback-selection-style";
+    
+    return [scheme isEqualToString:kCallbackScheme];
 }
 
 - (BOOL)isInputCallbackScheme:(NSString*)scheme
 {
-	static NSString* const kCallbackScheme = @"callback-input";
-	
-	return [scheme isEqualToString:kCallbackScheme];
+    static NSString* const kCallbackScheme = @"callback-input";
+    
+    return [scheme isEqualToString:kCallbackScheme];
 }
 
 - (void)processStyles:(NSString *)styles
 {
     NSArray *styleStrings = [styles componentsSeparatedByString:kDefaultCallbackParameterSeparator];
     NSMutableArray *itemsModified = [[NSMutableArray alloc] init];
-	
-	self.selectedImageURL = nil;
-	self.selectedImageAlt = nil;
-	self.selectedLinkURL = nil;
-	self.selectedLinkTitle = nil;
-	
+    
+    self.selectedImageURL = nil;
+    self.selectedImageAlt = nil;
+    self.selectedLinkURL = nil;
+    self.selectedLinkTitle = nil;
+    
     for (NSString *styleString in styleStrings) {
         NSString *updatedItem = styleString;
         if ([styleString hasPrefix:@"link:"]) {
@@ -1128,13 +1128,13 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
         }
         [itemsModified addObject:updatedItem];
     }
-	
+    
     styleStrings = [NSArray arrayWithArray:itemsModified];
     
-	if ([self.delegate respondsToSelector:@selector(editorView:stylesForCurrentSelection:)])
-	{
-		[self.delegate editorView:self stylesForCurrentSelection:styleStrings];
-	}
+    if ([self.delegate respondsToSelector:@selector(editorView:stylesForCurrentSelection:)])
+    {
+        [self.delegate editorView:self stylesForCurrentSelection:styleStrings];
+    }
 }
 
 #pragma mark - Viewport rect
@@ -1171,7 +1171,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
  */
 - (NSArray*)componentsFromParameter:(NSString*)parameter
 {
-	NSParameterAssert([parameter isKindOfClass:[NSString class]]);
+    NSParameterAssert([parameter isKindOfClass:[NSString class]]);
     
     NSRange range = [parameter rangeOfString:kDefaultCallbackParameterComponentSeparator];
     
@@ -1179,10 +1179,10 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     NSString* parameterValue = [parameter substringFromIndex:range.location + range.length];
     
     NSArray* components = @[parameterName, parameterValue];
-	NSAssert([components count] == 2,
-			 @"We're expecting exactly two components here.");
-	
-	return components;
+    NSAssert([components count] == 2,
+             @"We're expecting exactly two components here.");
+    
+    return components;
 }
 
 /**
@@ -1195,28 +1195,28 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
  *	@param		onCompleteBlock		The block to execute when the parsing finishes.  Can be nil.
  */
 - (void)parseParametersFromCallbackURL:(NSURL*)url
-	   andExecuteBlockForEachParameter:(WPEditorViewCallbackParameterProcessingBlock)block
-							onComplete:(WPEditorViewNoParamsCompletionBlock)onCompleteBlock
+       andExecuteBlockForEachParameter:(WPEditorViewCallbackParameterProcessingBlock)block
+                            onComplete:(WPEditorViewNoParamsCompletionBlock)onCompleteBlock
 {
-	NSParameterAssert([url isKindOfClass:[NSURL class]]);
-	NSParameterAssert(block);
-	
-	NSArray* parameters = [self parametersFromCallbackURL:url];
-	
-	for (NSString* parameter in parameters) {
-		NSAssert([parameter isKindOfClass:[NSString class]],
-				 @"We're expecting to have a non-nil NSString object here.");
-		
+    NSParameterAssert([url isKindOfClass:[NSURL class]]);
+    NSParameterAssert(block);
+    
+    NSArray* parameters = [self parametersFromCallbackURL:url];
+    
+    for (NSString* parameter in parameters) {
+        NSAssert([parameter isKindOfClass:[NSString class]],
+                 @"We're expecting to have a non-nil NSString object here.");
+        
         NSArray* components = [self componentsFromParameter:parameter];
         NSAssert([components count] == 2,
                  @"We're expecting exactly two components here.");
-		
-		block([components objectAtIndex:0], [components objectAtIndex:1]);
-	}
-	
-	if (onCompleteBlock) {
-		onCompleteBlock();
-	}
+        
+        block([components objectAtIndex:0], [components objectAtIndex:1]);
+    }
+    
+    if (onCompleteBlock) {
+        onCompleteBlock();
+    }
 }
 
 /**
@@ -1228,11 +1228,11 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
  */
 - (NSArray*)parametersFromCallbackURL:(NSURL*)url
 {
-	NSParameterAssert([url isKindOfClass:[NSURL class]]);
-	
-	NSArray* parameters = [[url resourceSpecifier] componentsSeparatedByString:kDefaultCallbackParameterSeparator];
-	
-	return parameters;
+    NSParameterAssert([url isKindOfClass:[NSURL class]]);
+    
+    NSArray* parameters = [[url resourceSpecifier] componentsSeparatedByString:kDefaultCallbackParameterSeparator];
+    
+    return parameters;
 }
 
 #pragma mark - Fields
@@ -1259,7 +1259,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
         NSAssert(!_titleField,
                  @"We should never have to set this twice.");
         
-        _titleField = [[WPEditorField alloc] initWithId:fieldId webView:self.webView];
+        //_titleField = [[WPEditorField alloc] initWithId:fieldId webView:self.webView];
         newField = self.titleField;
     } else if ([fieldId isEqualToString:kWPEditorViewFieldContentId]) {
         NSAssert(!_contentField,
@@ -1306,14 +1306,14 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)undo
 {
     [self.webView stringByEvaluatingJavaScriptFromString:@"ZSSEditor.undo();"];
-	
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)redo
 {
     [self.webView stringByEvaluatingJavaScriptFromString:@"ZSSEditor.redo();"];
-	
+    
     [self callDelegateEditorTextDidChange];
 }
 
@@ -1420,7 +1420,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
         selectedText = [self.sourceView.text substringWithRange:range];
     }
     
-	return selectedText;
+    return selectedText;
 }
 
 - (void)setSelectedColor:(UIColor*)color tag:(int)tag
@@ -1432,9 +1432,9 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     } else if (tag == 2) {
         trigger = [NSString stringWithFormat:@"ZSSEditor.setBackgroundColor(\"%@\");", hex];
     }
-	
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-	
+    
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
@@ -1494,7 +1494,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 {
     NSString *trigger = [NSString stringWithFormat:@"ZSSEditor.removeImage(\"%@\");", uniqueId];
     [self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    
 }
 
 #pragma mark - Videos
@@ -1571,7 +1571,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     
     NSString* normalizedURL = url;
     NSRange substringRange = [url rangeOfString:kURLSchemePrefix];
-
+    
     if (substringRange.length == 0) {
         normalizedURL = [kDefaultScheme stringByAppendingString:url];
     }
@@ -1582,11 +1582,11 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 #pragma mark - Links
 
 - (void)insertLink:(NSString *)url
-			 title:(NSString*)title
+             title:(NSString*)title
 {
-	NSParameterAssert([url isKindOfClass:[NSString class]]);
-	NSParameterAssert([title isKindOfClass:[NSString class]]);
-	
+    NSParameterAssert([url isKindOfClass:[NSString class]]);
+    NSParameterAssert([title isKindOfClass:[NSString class]]);
+    
     url = [self normalizeURL:url];
     
     if (self.isInVisualMode) {
@@ -1597,21 +1597,21 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
         [self.sourceView insertText:aTagText];
         [self.sourceView becomeFirstResponder];
     }
-		
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (BOOL)isSelectionALink
 {
-	return self.selectedLinkURL != nil;
+    return self.selectedLinkURL != nil;
 }
 
 - (void)updateLink:(NSString *)url
-			 title:(NSString*)title
+             title:(NSString*)title
 {
-	NSAssert(self.isInVisualMode, @"Editor must be in visual mode when calling this method.");
+    NSAssert(self.isInVisualMode, @"Editor must be in visual mode when calling this method.");
     NSParameterAssert([url isKindOfClass:[NSString class]]);
-	NSParameterAssert([title isKindOfClass:[NSString class]]);
+    NSParameterAssert([title isKindOfClass:[NSString class]]);
     
     url = [self normalizeURL:url];
     
@@ -1625,12 +1625,12 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 
 - (void)removeLink
 {
-	[self.webView stringByEvaluatingJavaScriptFromString:@"ZSSEditor.unlink();"];
+    [self.webView stringByEvaluatingJavaScriptFromString:@"ZSSEditor.unlink();"];
 }
 
 - (void)quickLink
 {
-	[self.webView stringByEvaluatingJavaScriptFromString:@"ZSSEditor.quickLink();"];
+    [self.webView stringByEvaluatingJavaScriptFromString:@"ZSSEditor.quickLink();"];
 }
 
 #pragma mark - Editor: HTML interaction
@@ -1668,25 +1668,25 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 
 - (void)endEditing;
 {
-	[self.webView endEditing:YES];
-	[self.sourceView endEditing:YES];
+    [self.webView endEditing:YES];
+    [self.sourceView endEditing:YES];
 }
 
 #pragma mark - Editor mode
 
 - (BOOL)isInVisualMode
 {
-	return !self.webView.hidden;
+    return !self.webView.hidden;
 }
 
 - (void)showHTMLSource
 {
-	self.sourceView.text = [self.contentField html];
-	self.sourceView.hidden = NO;
+    self.sourceView.text = [self.contentField html];
+    self.sourceView.hidden = NO;
     self.sourceViewTitleField.text = [self.titleField strippedHtml];
     self.sourceViewTitleField.hidden = NO;
     self.sourceContentDividerView.hidden = NO;
-	self.webView.hidden = YES;
+    self.webView.hidden = YES;
     
     [self.sourceView becomeFirstResponder];
     UITextPosition* position = [self.sourceView positionFromPosition:[self.sourceView beginningOfDocument]
@@ -1697,12 +1697,12 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 
 - (void)showVisualEditor
 {
-	[self.contentField setHtml:self.sourceView.text];
-	self.sourceView.hidden = YES;
+    [self.contentField setHtml:self.sourceView.text];
+    self.sourceView.hidden = YES;
     [self.titleField setHtml:self.sourceViewTitleField.text];
     self.sourceViewTitleField.hidden = YES;
     self.sourceContentDividerView.hidden = YES;
-	self.webView.hidden = NO;
+    self.webView.hidden = NO;
     
     [self.contentField focus];
 }
@@ -1734,7 +1734,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)alignLeft
 {
     NSString *trigger = @"ZSSEditor.setJustifyLeft();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
     
     [self callDelegateEditorTextDidChange];
 }
@@ -1742,24 +1742,24 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)alignCenter
 {
     NSString *trigger = @"ZSSEditor.setJustifyCenter();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)alignRight
 {
     NSString *trigger = @"ZSSEditor.setJustifyRight();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)alignFull
 {
     NSString *trigger = @"ZSSEditor.setJustifyFull();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
@@ -1802,8 +1802,8 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)setSubscript
 {
     NSString *trigger = @"ZSSEditor.setSubscript();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
@@ -1822,8 +1822,8 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 - (void)setSuperscript
 {
     NSString *trigger = @"ZSSEditor.setSuperscript();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
@@ -1835,7 +1835,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     } else {
         [self wrapSourceViewSelectionWithTag:@"del"];
     }
-
+    
     [self callDelegateEditorTextDidChange];
 }
 
@@ -1847,7 +1847,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     } else {
         [self wrapSourceViewSelectionWithTag:@"ul"];
     }
-
+    
     [self callDelegateEditorTextDidChange];
 }
 
@@ -1859,87 +1859,87 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     } else {
         [self wrapSourceViewSelectionWithTag:@"ol"];
     }
-
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)setHR
 {
     NSString *trigger = @"ZSSEditor.setHorizontalRule();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)setIndent
 {
     NSString *trigger = @"ZSSEditor.setIndent();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)setOutdent
 {
     NSString *trigger = @"ZSSEditor.setOutdent();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)heading1
 {
     NSString *trigger = @"ZSSEditor.setHeading('h1');";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)heading2
 {
     NSString *trigger = @"ZSSEditor.setHeading('h2');";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)heading3
 {
     NSString *trigger = @"ZSSEditor.setHeading('h3');";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)heading4
 {
     NSString *trigger = @"ZSSEditor.setHeading('h4');";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)heading5
 {
     NSString *trigger = @"ZSSEditor.setHeading('h5');";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)heading6
 {
     NSString *trigger = @"ZSSEditor.setHeading('h6');";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
 - (void)removeFormat
 {
     NSString *trigger = @"ZSSEditor.removeFormating();";
-	[self.webView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self.webView stringByEvaluatingJavaScriptFromString:trigger];
+    
     [self callDelegateEditorTextDidChange];
 }
 
