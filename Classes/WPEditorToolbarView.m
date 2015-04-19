@@ -270,8 +270,7 @@ static const CGFloat WPEditorToolbarDividerLineWidth = 0.6f;
 
 - (ZSSRichTextEditorToolbar)defaultToolbarItems
 {
-    ZSSRichTextEditorToolbar defaultToolbarItems = (ZSSRichTextEditorToolbarInsertImage
-                                                    | ZSSRichTextEditorToolbarBold
+    ZSSRichTextEditorToolbar defaultToolbarItems = (ZSSRichTextEditorToolbarBold
                                                     | ZSSRichTextEditorToolbarItalic
                                                     | ZSSRichTextEditorToolbarInsertLink
                                                     | ZSSRichTextEditorToolbarBlockQuote
